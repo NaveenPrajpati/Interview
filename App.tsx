@@ -1,94 +1,106 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 
 import axios from 'axios';
-import React, { useState } from 'react';
-import type {PropsWithChildren} from 'react';
+import React, { useEffect, useState } from 'react';
+import type { PropsWithChildren } from 'react';
+import moment from 'moment'
 import {
-  Button,
+  Dimensions,
   FlatList,
   Image,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 
 
 
 function App(): JSX.Element {
-  const [fetchedData,setFetchedData]=useState([])
- 
-async function getData(){
-  axios.get('https://stagingsite.livelaw.in/dev/h-api/news',{
-    headers:{
-      's-id':'CKEY0F1HNJGSZHJFQPYB5HBMJEM79K26YQDJTY0RX7MVPHGHXTKALSTVARSDAYKUGF2Y' 
-    }
-  }).then(res=>{
-    // console.log(res.data)
-    console.log(res.data.news[0])
-    setFetchedData(res.data.news)
-  }).catch(err=>{
-    console.log(err)
-  })
-}
+  const [fetchedData, setFetchedData] = useState([])
+  const height = Dimensions.get('screen').height
+  async function getData() {
+    axios.get('https://stagingsite.livelaw.in/dev/h-api/news', {
+      headers: {
+        's-id': 'CKEY0F1HNJGSZHJFQPYB5HBMJEM79K26YQDJTY0RX7MVPHGHXTKALSTVARSDAYKUGF2Y'
+      }
+    }).then(res => {
+      setFetchedData(res.data.news)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
 
   return (
     <View>
 
-<Button title='getdata' onPress={getData}/>
-<FlatList
-data={fetchedData}
-renderItem={({item,index})=>(
-  <View style={{borderWidth:1,borderRadius:4,margin:2,height:''}}>
-    <View style={{position:'relative'}}>
-<Image source={{uri:item?.mediaId}} alt='' width={'100%'} height={200}/>
-<Text style={{position:'absolute',top:5,left:0,backgroundColor:'yellow'}}>{item?.location}</Text>
-    </View>
-    <Text>{item?.description}</Text>
-<View style={{flexDirection:'row',justifyContent:'space-between'}}>
-  <View>
-    <Image source={''} alt='no' width={5} height={5}/>
-    <Text>{item?.authorName}</Text>
-  </View>
-  <View>
-    <Image source={''} alt='no' width={5} height={5}/>
-    <Text>{item?.date_news}</Text>
-  </View>
+      <FlatList
+        data={fetchedData}
+        renderItem={({ item, index }) => (
+          <View key={index} style={styles.container} >
+            <View style={{ position: 'relative' }}>
+              <Image source={{ uri: item?.mediaId ? item.mediaId : 'https://www.nic.in/wp-content/uploads/2022/02/LC-NC.png' }} alt='' height={200} style={{ width: '100%' }} />
+              <Text style={styles.location}>{item?.location ? item?.location : 'india'}</Text>
+            </View>
+            <Text style={styles.discription}>{item?.description ? item?.description : 'The most dangerous bakugan in the world is here.'}</Text>
+            
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 5 }}>
+              
+              <View style={styles.subcontainer}>
+                <Image source={{ uri: 'https://img.freepik.com/free-icon/user_318-563642.jpg?w=360' }} alt='no' width={30} height={30} />
+                <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black' }}>{item?.authorName}</Text>
+              </View>
+              
+              <View style={styles.subcontainer}>
+                <Image source={{ uri: 'https://static.vecteezy.com/system/resources/previews/019/873/851/original/clock-icon-transparent-free-icon-free-png.png' }} alt='no' width={30} height={30} />
+                <Text style={styles.time}>{moment(item?.date_news).fromNow()}</Text>
+              </View>
 
-</View>
-  </View>
-)}/>
-    
-</View>
+            </View>
+          </View>
+        )} />
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    borderWidth: 2,
+    borderColor: 'gray',
+    borderRadius: 10,
+    margin: 4,
+    backgroundColor: '#f9fbfd'
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  location: {
+    position: 'absolute',
+    fontSize: 20,
+    top: 15,
+    left: 0,
+    backgroundColor: 'orange',
+    fontWeight: 'bold',
+    color: 'black',
+    paddingHorizontal: 10,
+    paddingVertical: 2
   },
-  sectionDescription: {
-    marginTop: 8,
+  discription: {
+    fontSize: 22, 
+    fontWeight: 'bold',
+     color: 'black',
+      padding: 5 
+  },
+  subcontainer: {
+    flexDirection: 'row',
+     alignItems: 'center',
+      gap: 3 
+  },
+  time: {
     fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+     fontWeight: '400', 
+     color: 'black' 
   },
 });
 
