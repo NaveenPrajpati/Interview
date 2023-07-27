@@ -42,7 +42,7 @@ function App(): JSX.Element {
         renderItem={({ item, index }) => (
           <View key={index} style={styles.container} >
             <View style={{ position: 'relative' }}>
-              <Image source={{ uri: item?.mediaId ? item.mediaId : 'https://www.nic.in/wp-content/uploads/2022/02/LC-NC.png' }} alt='' height={200} style={{ width: '100%' }} />
+              <Image source={{ uri: item?.mediaId ? item.mediaId : 'https://www.nic.in/wp-content/uploads/2022/02/LC-NC.png' }} alt='' height={200} style={{ width: '100%',borderTopLeftRadius:10,borderTopRightRadius:10 }} />
               <Text style={styles.location}>{item?.location ? item?.location : 'india'}</Text>
             </View>
             <Text style={styles.discription}>{item?.description ? item?.description : 'The most dangerous bakugan in the world is here.'}</Text>
@@ -51,7 +51,7 @@ function App(): JSX.Element {
               
               <View style={styles.subcontainer}>
                 <Image source={{ uri: 'https://img.freepik.com/free-icon/user_318-563642.jpg?w=360' }} alt='no' width={30} height={30} />
-                <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black' }}>{item?.authorName}</Text>
+                <Text style={{ fontSize: 15, fontWeight: 'bold', color: 'black', }}>{item?.authorName.substring(0,12)}</Text>
               </View>
               
               <View style={styles.subcontainer}>
@@ -73,7 +73,8 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
     borderRadius: 10,
     margin: 4,
-    backgroundColor: '#f9fbfd'
+    backgroundColor: '#f9fbfd',
+    
   },
   location: {
     position: 'absolute',
@@ -94,8 +95,11 @@ const styles = StyleSheet.create({
   },
   subcontainer: {
     flexDirection: 'row',
+    
      alignItems: 'center',
-      gap: 3 
+      gap: 3,
+      
+      
   },
   time: {
     fontSize: 18,
